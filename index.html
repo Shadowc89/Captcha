@@ -530,6 +530,23 @@
     const tg = window.Telegram && window.Telegram.WebApp, language = (tg?.initDataUnsafe?.user?.language_code || "en").toLowerCase().split("-")[0], copy = translations[language] || translations.en, token = new URLSearchParams(location.hash.slice(1)).get("token") || "", button = document.getElementById("submit"), label = document.getElementById("submit-label"), status = document.getElementById("status"); let widget = null, started = false;
     document.documentElement.lang = language; document.documentElement.dir = language === "ar" || language === "qr" ? "rtl" : "ltr"; for (const [id, key] of [["secure-label", "secure"], ["eyebrow", "eyebrow"], ["step-label", "step"], ["title", "title"], ["description", "description"], ["privacy-note", "privacy"], ["footer-copy", "footer"]]) document.getElementById(id).textContent = copy[key]; label.textContent = copy.submit; if (tg) { tg.ready(); tg.expand() }
     function message(text, kind = "") { status.textContent = text; status.dataset.kind = kind } function reset() { if (widget !== null && window.hcaptcha) window.hcaptcha.reset(widget); button.disabled = true }
+    const landing = {
+      ar: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله لك البوت لبدء التحقق."],
+      qr: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله لك البوت لبدء التحقق."],
+      en: ["Hyper Help Mini App", "Open the verification link sent by the bot to start your check."],
+      de: ["Hyper Help Mini App", "Öffne den Prüfungslink des Bots, um die Prüfung zu starten."],
+      fr: ["Mini-app Hyper Help", "Ouvrez le lien de vérification envoyé par le bot pour commencer."],
+      ru: ["Мини-приложение Hyper Help", "Откройте ссылку проверки, отправленную ботом, чтобы начать."],
+      sp: ["Mini aplicación Hyper Help", "Abre el enlace de verificación del bot para comenzar."]
+    };
+    if (!token) {
+      document.getElementById("title").textContent = landing[language]?.[0] || landing.en[0];
+      document.getElementById("description").textContent = landing[language]?.[1] || landing.en[1];
+      document.querySelector(".step-label").hidden = true;
+      document.querySelector(".challenge-frame").hidden = true;
+      button.hidden = true;
+      started = true;
+    }
     window.initializeCaptcha = async function () { if (started) return; started = true; if (!tg?.initData || !token) { message(copy.expired, "error"); return } try { const response = await fetch("/captcha/config", { cache: "no-store" }); if (!response.ok) throw Error(); const config = await response.json(); if (!config.sitekey) throw Error(); widget = window.hcaptcha.render("challenge", { sitekey: config.sitekey, callback: () => { button.disabled = false; message("") }, "expired-callback": () => { button.disabled = true; message(copy.failed, "error") }, "error-callback": () => { button.disabled = true; message(copy.unavailable, "error") } }) } catch (_) { message(copy.unavailable, "error") } }; if (window.hcaptchaReady) window.initializeCaptcha();
     button.addEventListener("click", async () => { if (widget === null || !tg?.initData || !window.hcaptcha) return; const answer = window.hcaptcha.getResponse(widget); if (!answer) return; button.disabled = true; label.textContent = copy.loading; message(copy.loading); try { const response = await fetch("/captcha/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ init_data: tg.initData, session_token: token, hcaptcha_response: answer }) }), result = await response.json(); if (result.ok) { message(copy.success, "success"); button.hidden = true; setTimeout(() => tg.close(), 1400); return } if (result.error === "session_expired" || result.error === "session_used") { message(copy.expired, "error"); return } if (result.error === "captcha_failed" && result.attempts_left > 0) message(copy.attempts.replace("{count}", result.attempts_left), "error"); else if (result.error === "attempts_exhausted") { message(copy.failed, "error"); return } else if (result.error === "verification_unavailable" || response.status >= 500) message(copy.unavailable, "error"); else message(copy.failed, "error"); reset() } catch (_) { message(copy.unavailable, "error"); reset() } finally { if (!button.hidden) label.textContent = copy.submit } });
   </script>
