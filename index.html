@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1320">
+  <meta name="color-scheme" content="dark light">
+  <title>Secure group verification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://telegram.org/js/telegram-web-app.js?64"></script>
+  <script>window.onHCaptchaLoaded = function () { window.hcaptchaReady = true; if (window.initializeCaptcha) window.initializeCaptcha(); };</script>
+  <script src="https://js.hcaptcha.com/1/api.js?onload=onHCaptchaLoaded&render=explicit" async defer></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--tg-theme-text-color, #eef3fa);
+      background: #0b1320;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      --muted: var(--tg-theme-hint-color, #8c9bad);
+      --line: rgba(174, 195, 218, .12);
+      --accent: #69d1c2
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      display: grid;
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0;
+      padding: max(24px, env(safe-area-inset-top)) 22px max(20px, env(safe-area-inset-bottom));
+      overflow-x: hidden;
+      place-items: center;
+      background: radial-gradient(ellipse at 50% 42%, rgba(45, 81, 106, .22), transparent 49%), linear-gradient(145deg, #0b1320, #101b29 52%, #0b1420)
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 480px)
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 4px 22px
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #edf3f8;
+      text-decoration: none
+    }
+
+    .brand-mark {
+      display: flex;
+      width: 27px;
+      height: 27px;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 5px;
+      border: 1px solid rgba(105, 209, 194, .35);
+      border-radius: 9px;
+      background: rgba(105, 209, 194, .08)
+    }
+
+    .brand-mark span {
+      width: 4px;
+      border-radius: 4px;
+      background: var(--accent)
+    }
+
+    .brand-mark span:nth-child(1) {
+      height: 8px;
+      opacity: .7
+    }
+
+    .brand-mark span:nth-child(2) {
+      height: 13px
+    }
+
+    .brand-mark span:nth-child(3) {
+      height: 10px;
+      opacity: .85
+    }
+
+    .brand-name {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .16em
+    }
+
+    .secure-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #aebdca;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .04em
+    }
+
+    .secure-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #68d4a6;
+      box-shadow: 0 0 12px rgba(104, 212, 166, .55)
+    }
+
+    .verification-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(175, 200, 222, .15);
+      border-radius: 25px;
+      background: linear-gradient(145deg, rgba(22, 36, 52, .98), rgba(15, 27, 41, .98));
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .035)
+    }
+
+    .card-glow {
+      position: absolute;
+      top: -170px;
+      left: 50%;
+      width: 390px;
+      height: 300px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(73, 168, 165, .13);
+      filter: blur(80px);
+      pointer-events: none
+    }
+
+    .card-content {
+      position: relative;
+      padding: 35px 32px 26px;
+      text-align: center
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #86a2b1;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .19em
+    }
+
+    .eyebrow-line {
+      width: 18px;
+      height: 1px;
+      background: #5e9f9b
+    }
+
+    .shield {
+      display: grid;
+      width: 68px;
+      height: 68px;
+      margin: 25px auto 15px;
+      place-items: center;
+      border: 1px solid rgba(105, 209, 194, .24);
+      border-radius: 22px;
+      color: #81ded0;
+      background: linear-gradient(145deg, rgba(97, 195, 181, .14), rgba(56, 114, 127, .08));
+      box-shadow: 0 0 32px rgba(79, 177, 164, .1), inset 0 1px 0 rgba(255, 255, 255, .06)
+    }
+
+    .shield svg {
+      width: 36px;
+      height: 36px
+    }
+
+    .step-label {
+      margin: 0 0 7px;
+      color: #8aa0b0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em
+    }
+
+    h1 {
+      margin: 0;
+      color: #f2f6fa;
+      font-size: clamp(25px, 7vw, 31px);
+      font-weight: 700;
+      letter-spacing: -.045em
+    }
+
+    .description {
+      max-width: 320px;
+      margin: 10px auto 24px;
+      color: #9aaaba;
+      font-size: 14px;
+      line-height: 1.65
+    }
+
+    .challenge-frame {
+      display: grid;
+      min-height: 80px;
+      padding: 10px;
+      place-items: center;
+      border: 1px solid rgba(174, 195, 218, .11);
+      border-radius: 14px;
+      background: rgba(5, 13, 23, .3)
+    }
+
+    #challenge {
+      display: flex;
+      min-width: 0;
+      min-height: 64px;
+      justify-content: center;
+      align-items: center
+    }
+
+    .verify-button {
+      display: flex;
+      width: 100%;
+      min-height: 50px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 0 20px;
+      border: 1px solid rgba(155, 237, 220, .4);
+      border-radius: 13px;
+      color: #0a201f;
+      background: linear-gradient(110deg, #8be1cf, #65cabb);
+      box-shadow: 0 9px 24px rgba(70, 186, 169, .14);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .18s ease, filter .18s ease, opacity .18s ease
+    }
+
+    .verify-button:not(:disabled):hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px)
+    }
+
+    .verify-button:disabled {
+      cursor: not-allowed;
+      opacity: .45
+    }
+
+    .verify-button:focus-visible {
+      outline: 3px solid rgba(139, 225, 207, .4);
+      outline-offset: 3px
+    }
+
+    .button-arrow {
+      width: 17px;
+      height: 17px
+    }
+
+    .status {
+      min-height: 21px;
+      margin: 11px 0 0;
+      color: #a7b5c3;
+      font-size: 12px;
+      line-height: 1.5
+    }
+
+    .status[data-kind=error] {
+      color: #ff9d9d
+    }
+
+    .status[data-kind=success] {
+      color: #84ddbb
+    }
+
+    .status:empty {
+      min-height: 13px;
+      margin-top: 4px
+    }
+
+    .card-divider {
+      height: 1px;
+      margin: 16px 0;
+      background: linear-gradient(90deg, transparent, var(--line) 15%, var(--line) 85%, transparent)
+    }
+
+    .privacy-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #7e91a2;
+      font-size: 11px;
+      line-height: 1.5
+    }
+
+    .privacy-note svg {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 auto;
+      color: #79b8ae
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 19px 8px 0;
+      color: #687b8c;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-align: center
+    }
+
+    .footer-divider {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #638b8c
+    }
+
+    .ambient {
+      position: fixed;
+      z-index: 0;
+      width: 260px;
+      height: 260px;
+      border: 1px solid rgba(105, 209, 194, .035);
+      border-radius: 50%;
+      pointer-events: none
+    }
+
+    .ambient:after {
+      position: absolute;
+      inset: 24px;
+      border: 1px solid rgba(105, 209, 194, .035);
+      border-radius: inherit;
+      content: ""
+    }
+
+    .ambient-one {
+      top: -160px;
+      right: -100px
+    }
+
+    .ambient-two {
+      bottom: -190px;
+      left: -130px;
+      transform: scale(1.35)
+    }
+
+    html[dir=rtl] .button-arrow {
+      transform: rotate(180deg)
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    @media(max-width:420px) {
+      body {
+        padding-right: 15px;
+        padding-left: 15px
+      }
+
+      .card-content {
+        padding: 29px 20px 22px
+      }
+
+      .description {
+        font-size: 13px
+      }
+
+      .footer {
+        font-size: 8px;
+        letter-spacing: .1em
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      *,
+      *:before,
+      *:after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important
+      }
+    }
+
+    @media(prefers-color-scheme:light) {
+      :root {
+        color-scheme: light;
+        color: var(--tg-theme-text-color, #17212b);
+        --line: rgba(57, 76, 96, .13)
+      }
+
+      body {
+        background: radial-gradient(ellipse at 50% 42%, rgba(98, 177, 173, .12), transparent 50%), linear-gradient(145deg, #edf3f6, #e4edf0 52%, #f4f6f5)
+      }
+
+      .brand {
+        color: #172c3b
+      }
+
+      .secure-label {
+        color: #587080
+      }
+
+      .verification-card {
+        border-color: rgba(59, 91, 112, .13);
+        background: linear-gradient(145deg, rgba(255, 255, 255, .97), rgba(246, 250, 250, .98));
+        box-shadow: 0 28px 80px rgba(35, 66, 82, .13), inset 0 1px 0 white
+      }
+
+      .eyebrow,
+      .step-label {
+        color: #62808c
+      }
+
+      h1 {
+        color: #193044
+      }
+
+      .description {
+        color: #687d8a
+      }
+
+      .challenge-frame {
+        border-color: rgba(60, 88, 105, .12);
+        background: rgba(237, 243, 245, .72)
+      }
+
+      .status {
+        color: #637985
+      }
+
+      .status[data-kind=error] {
+        color: #b53d47
+      }
+
+      .status[data-kind=success] {
+        color: #168268
+      }
+
+      .privacy-note,
+      .footer {
+        color: #748994
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Hyper Help home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="brand-name">Hyper Help</span>
+      </a>
+      <div class="secure-label"><span class="secure-dot"></span><span id="secure-label">Secure check</span></div>
+    </header>
+
+    <section class="verification-card" aria-labelledby="title">
+      <div class="card-glow" aria-hidden="true"></div>
+      <div class="card-content">
+        <div class="eyebrow"><span class="eyebrow-line"></span><span id="eyebrow">COMMUNITY ACCESS</span></div>
+        <div class="shield" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 5.5 39 11v11.2c0 9.6-6.2 16.2-15 20.3-8.8-4.1-15-10.7-15-20.3V11l15-5.5Z" stroke="currentColor"
+              stroke-width="1.8" />
+            <path d="m17.5 23.8 4.2 4.2 9-9.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <p class="step-label" id="step-label">ONE QUICK STEP</p>
+        <h1 id="title">Verify it’s you</h1>
+        <p class="description" id="description">Complete this quick security check to continue to your group.</p>
+
+        <div class="challenge-frame">
+          <div id="challenge"></div>
+        </div>
+
+        <button id="submit" class="verify-button" type="button" disabled>
+          <span id="submit-label">Continue</span>
+          <svg class="button-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4.2 10h11.6m-4.8-4.8 4.8 4.8-4.8 4.8" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+
+        <div class="card-divider"></div>
+        <div class="privacy-note">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="4.2" y="8.3" width="11.6" height="8.2" rx="1.8" stroke="currentColor" stroke-width="1.35" />
+            <path d="M6.7 8.2V6a3.3 3.3 0 0 1 6.6 0v2.2" stroke="currentColor" stroke-width="1.35"
+              stroke-linecap="round" />
+            <circle cx="10" cy="12.3" r=".9" fill="currentColor" />
+          </svg>
+          <span id="privacy-note">Your verification is protected and used only for group access.</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer"><span id="footer-copy">A safer space starts with you.</span><span
+        class="footer-divider"></span><span>POWERED BY Hyper Help</span></footer>
+  </main>
+  <script>
+    const translations = {
+      en: { secure: "Secure check", eyebrow: "COMMUNITY ACCESS", step: "ONE QUICK STEP", title: "Verify it’s you", description: "Complete this quick security check to continue to your group.", submit: "Continue", loading: "Checking your response…", failed: "That check did not go through. Please try again.", attempts: "That check did not go through. Attempts left: {count}.", expired: "This verification link has expired. Return to the bot and request a new one.", unavailable: "Verification is temporarily unavailable. Please try again shortly.", success: "You’re verified. You can return to your group.", privacy: "Your verification is protected and used only for group access.", footer: "A safer space starts with you." },
+      ar: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان السريع للمتابعة إلى مجموعتك.", submit: "متابعة", loading: "جارٍ التحقق من إجابتك…", failed: "لم يكتمل الفحص. حاول مرة أخرى.", attempts: "لم يكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع إلى البوت واطلب رابطًا جديدًا.", unavailable: "التحقق غير متاح مؤقتًا. حاول مرة أخرى بعد قليل.", success: "تم التحقق. يمكنك الرجوع إلى مجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
+      qr: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان للمتابعة إلى مجموعتك.", submit: "متابعة", loading: "جارٍ التحقق من إجابتك…", failed: "ما اكتمل الفحص. حاول مرة ثانية.", attempts: "ما اكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع للبوت واطلب رابط جديد.", unavailable: "التحقق غير متاح مؤقتًا. حاول بعد شوي.", success: "تم التحقق. تقدر ترجع لمجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
+      de: { secure: "Sichere Prüfung", eyebrow: "ZUGANG ZUR COMMUNITY", step: "NUR EIN SCHRITT", title: "Bestätige, dass du es bist", description: "Schließe diese kurze Sicherheitsprüfung ab, um fortzufahren.", submit: "Weiter", loading: "Antwort wird geprüft…", failed: "Die Prüfung wurde nicht abgeschlossen. Bitte versuche es erneut.", attempts: "Verbleibende Versuche: {count}.", expired: "Dieser Prüfungslink ist abgelaufen. Fordere beim Bot einen neuen an.", unavailable: "Die Prüfung ist vorübergehend nicht verfügbar.", success: "Du bist bestätigt. Du kannst zu deiner Gruppe zurückkehren.", privacy: "Deine Prüfung dient nur dem Gruppenzugang.", footer: "Ein sicherer Ort beginnt mit dir." },
+      fr: { secure: "Contrôle sécurisé", eyebrow: "ACCÈS À LA COMMUNAUTÉ", step: "UNE ÉTAPE RAPIDE", title: "Confirmez que vous êtes humain", description: "Terminez ce contrôle rapide pour accéder à votre groupe.", submit: "Continuer", loading: "Vérification de votre réponse…", failed: "Le contrôle a échoué. Veuillez réessayer.", attempts: "Tentatives restantes : {count}.", expired: "Ce lien a expiré. Demandez-en un nouveau au bot.", unavailable: "La vérification est temporairement indisponible.", success: "Vous êtes vérifié. Vous pouvez retourner dans votre groupe.", privacy: "Votre vérification sert uniquement à accéder au groupe.", footer: "Un espace plus sûr commence avec vous." },
+      ru: { secure: "Защищённая проверка", eyebrow: "ДОСТУП К СООБЩЕСТВУ", step: "ОДИН ПРОСТОЙ ШАГ", title: "Подтвердите, что вы человек", description: "Пройдите короткую проверку, чтобы перейти в группу.", submit: "Продолжить", loading: "Проверяем ответ…", failed: "Проверка не пройдена. Попробуйте ещё раз.", attempts: "Осталось попыток: {count}.", expired: "Срок действия ссылки истёк. Запросите новую у бота.", unavailable: "Проверка временно недоступна.", success: "Проверка пройдена. Можно вернуться в группу.", privacy: "Проверка используется только для доступа в группу.", footer: "Безопасное сообщество начинается с вас." },
+      sp: { secure: "Comprobación segura", eyebrow: "ACCESO A LA COMUNIDAD", step: "UN PASO RÁPIDO", title: "Confirma que eres una persona", description: "Completa esta comprobación para continuar al grupo.", submit: "Continuar", loading: "Comprobando tu respuesta…", failed: "La comprobación no se completó. Inténtalo de nuevo.", attempts: "Intentos restantes: {count}.", expired: "Este enlace ha caducado. Pide uno nuevo al bot.", unavailable: "La verificación no está disponible temporalmente.", success: "Verificación completada. Puedes volver al grupo.", privacy: "Tu verificación solo se usa para acceder al grupo.", footer: "Un espacio más seguro empieza contigo." }
+    };
+    const tg = window.Telegram && window.Telegram.WebApp, language = (tg?.initDataUnsafe?.user?.language_code || "en").toLowerCase().split("-")[0], copy = translations[language] || translations.en, token = new URLSearchParams(location.hash.slice(1)).get("token") || "", button = document.getElementById("submit"), label = document.getElementById("submit-label"), status = document.getElementById("status"); let widget = null, started = false;
+    document.documentElement.lang = language; document.documentElement.dir = language === "ar" || language === "qr" ? "rtl" : "ltr"; for (const [id, key] of [["secure-label", "secure"], ["eyebrow", "eyebrow"], ["step-label", "step"], ["title", "title"], ["description", "description"], ["privacy-note", "privacy"], ["footer-copy", "footer"]]) document.getElementById(id).textContent = copy[key]; label.textContent = copy.submit; if (tg) { tg.ready(); tg.expand() }
+    function message(text, kind = "") { status.textContent = text; status.dataset.kind = kind } function reset() { if (widget !== null && window.hcaptcha) window.hcaptcha.reset(widget); button.disabled = true }
+    window.initializeCaptcha = async function () { if (started) return; started = true; if (!tg?.initData || !token) { message(copy.expired, "error"); return } try { const response = await fetch("/captcha/config", { cache: "no-store" }); if (!response.ok) throw Error(); const config = await response.json(); if (!config.sitekey) throw Error(); widget = window.hcaptcha.render("challenge", { sitekey: config.sitekey, callback: () => { button.disabled = false; message("") }, "expired-callback": () => { button.disabled = true; message(copy.failed, "error") }, "error-callback": () => { button.disabled = true; message(copy.unavailable, "error") } }) } catch (_) { message(copy.unavailable, "error") } }; if (window.hcaptchaReady) window.initializeCaptcha();
+    button.addEventListener("click", async () => { if (widget === null || !tg?.initData || !window.hcaptcha) return; const answer = window.hcaptcha.getResponse(widget); if (!answer) return; button.disabled = true; label.textContent = copy.loading; message(copy.loading); try { const response = await fetch("/captcha/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ init_data: tg.initData, session_token: token, hcaptcha_response: answer }) }), result = await response.json(); if (result.ok) { message(copy.success, "success"); button.hidden = true; setTimeout(() => tg.close(), 1400); return } if (result.error === "session_expired" || result.error === "session_used") { message(copy.expired, "error"); return } if (result.error === "captcha_failed" && result.attempts_left > 0) message(copy.attempts.replace("{count}", result.attempts_left), "error"); else if (result.error === "attempts_exhausted") { message(copy.failed, "error"); return } else if (result.error === "verification_unavailable" || response.status >= 500) message(copy.unavailable, "error"); else message(copy.failed, "error"); reset() } catch (_) { message(copy.unavailable, "error"); reset() } finally { if (!button.hidden) label.textContent = copy.submit } });
+  </script>
+</body>
+
+</html>
