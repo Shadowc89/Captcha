@@ -460,19 +460,32 @@
 
     :root {
       color-scheme: dark;
-      color: #fff;
-      background: #000;
-      --accent: #fff;
-      --line: rgba(255, 255, 255, .16)
+      color: #f7f4ff;
+      background: #11101b;
+      --accent: #b6a1ff;
+      --line: rgba(197, 179, 255, .18)
     }
 
     body {
-      color: #fff;
-      background: #000
+      color: #f7f4ff;
+      background:
+        radial-gradient(ellipse at 12% 12%, rgba(129, 93, 255, .22), transparent 34%),
+        radial-gradient(ellipse at 88% 78%, rgba(46, 207, 190, .14), transparent 35%),
+        linear-gradient(145deg, #11101b, #171426 55%, #101b21)
     }
 
     .ambient {
-      opacity: 0
+      opacity: .8;
+      border-color: rgba(173, 145, 255, .12);
+      animation: float-orbit 11s ease-in-out infinite alternate
+    }
+
+    .ambient:after {
+      border-color: rgba(74, 225, 205, .11)
+    }
+
+    .ambient-two {
+      animation-delay: -5s
     }
 
     .brand,
@@ -484,50 +497,129 @@
     .status,
     .privacy-note,
     .footer {
-      color: #fff
+      color: #f7f4ff
     }
 
-    .brand-mark,
-    .shield {
-      border-color: rgba(255, 255, 255, .5);
-      background: #080808
+    .brand-mark {
+      border-color: rgba(202, 184, 255, .4);
+      background: linear-gradient(145deg, rgba(148, 111, 255, .28), rgba(63, 216, 198, .16));
+      box-shadow: 0 5px 22px rgba(134, 101, 255, .17)
     }
 
-    .brand-mark span,
-    .secure-dot,
-    .eyebrow-line,
-    .privacy-note svg {
-      color: #fff;
-      background-color: #fff
+    .brand-mark span {
+      background: linear-gradient(180deg, #c7b5ff, #6ce2cf)
     }
 
-    .shield {
-      color: #fff;
-      background: #080808
+    .secure-dot {
+      background: #5ee0c5;
+      box-shadow: 0 0 0 4px rgba(94, 224, 197, .12), 0 0 15px rgba(94, 224, 197, .72);
+      animation: dot-pulse 2s ease-in-out infinite
+    }
+
+    .eyebrow {
+      color: #c4b2ff
+    }
+
+    .eyebrow-line {
+      background: linear-gradient(90deg, #a78bfa, #5de0c7)
+    }
+
+    .step-label {
+      color: #9de7d8
     }
 
     .verification-card {
-      border-color: rgba(255, 255, 255, .45);
-      background: #080808;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .08)
+      border-color: rgba(191, 171, 255, .28);
+      background: linear-gradient(145deg, rgba(34, 29, 52, .96), rgba(20, 34, 39, .97));
+      box-shadow: 0 28px 90px rgba(5, 5, 14, .52), 0 0 46px rgba(126, 93, 231, .1), inset 0 1px 0 rgba(255, 255, 255, .08);
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .verification-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(191, 171, 255, .46);
+        box-shadow: 0 34px 100px rgba(5, 5, 14, .58), 0 0 58px rgba(126, 93, 231, .16), inset 0 1px 0 rgba(255, 255, 255, .1)
+      }
     }
 
     .card-glow {
-      background: rgba(255, 255, 255, .06)
+      background: radial-gradient(ellipse at 50% 0, rgba(174, 139, 255, .2), transparent 64%)
+    }
+
+    .shield {
+      color: #c8b6ff;
+      border-color: rgba(192, 169, 255, .36);
+      background: linear-gradient(145deg, rgba(150, 112, 255, .2), rgba(51, 207, 187, .11));
+      box-shadow: 0 0 34px rgba(145, 108, 255, .18), inset 0 1px 0 rgba(255, 255, 255, .09);
+      animation: shield-float 3.4s ease-in-out infinite
     }
 
     .challenge-frame {
-      border-color: rgba(255, 255, 255, .24);
-      background: #000
+      border-color: rgba(172, 155, 218, .2);
+      background: linear-gradient(135deg, rgba(10, 12, 23, .7), rgba(16, 30, 35, .76));
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease
     }
 
-    .status[data-kind=error],
+    .challenge-frame:focus-within {
+      border-color: rgba(112, 223, 202, .58);
+      box-shadow: 0 0 0 3px rgba(112, 223, 202, .09), 0 8px 28px rgba(18, 180, 156, .08)
+    }
+
+    .status[data-kind=loading] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #c4b2ff
+    }
+
+    .status[data-kind=loading]:before {
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(196, 178, 255, .3);
+      border-top-color: #72e3cc;
+      border-radius: 50%;
+      content: "";
+      animation: spin .75s linear infinite
+    }
+
+    .status[data-kind=error] {
+      color: #ffabbc
+    }
+
     .status[data-kind=success] {
-      color: #fff
+      color: #7de6c9
+    }
+
+    .privacy-note svg {
+      color: #78dfca
     }
 
     .footer-divider {
-      background: #fff
+      background: linear-gradient(90deg, #b59cff, #63dfc8)
+    }
+
+    @keyframes dot-pulse {
+      50% { box-shadow: 0 0 0 7px rgba(94, 224, 197, .04), 0 0 19px rgba(94, 224, 197, .85) }
+    }
+
+    @keyframes shield-float {
+      50% { transform: translateY(-3px) rotate(-2deg) }
+    }
+
+    @keyframes float-orbit {
+      to { transform: translate3d(-16px, 13px, 0) scale(1.06) }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg) }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      .ambient, .secure-dot, .shield, .status[data-kind=loading]:before {
+        animation: none !important
+      }
     }
   </style>
 </head>
@@ -584,9 +676,9 @@
   </main>
   <script>
     const translations = {
-      en: { secure: "Secure check", eyebrow: "COMMUNITY ACCESS", step: "ONE QUICK STEP", title: "Verify it’s you", description: "Complete this quick security check to continue to your group.", loading: "Checking your response…", failed: "That check did not go through. Please try again.", attempts: "That check did not go through. Attempts left: {count}.", expired: "This verification link has expired. Return to the bot and request a new one.", unavailable: "Verification is temporarily unavailable. Please try again shortly.", success: "You’re verified. You can return to your group.", privacy: "Your verification is protected and used only for group access.", footer: "A safer space starts with you." },
-      ar: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان السريع للمتابعة إلى مجموعتك.", loading: "جارٍ التحقق من إجابتك…", failed: "لم يكتمل الفحص. حاول مرة أخرى.", attempts: "لم يكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع إلى البوت واطلب رابطًا جديدًا.", unavailable: "التحقق غير متاح مؤقتًا. حاول مرة أخرى بعد قليل.", success: "تم التحقق. يمكنك الرجوع إلى مجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
-      qr: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان للمتابعة إلى مجموعتك.", loading: "جارٍ التحقق من إجابتك…", failed: "ما اكتمل الفحص. حاول مرة ثانية.", attempts: "ما اكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع للبوت واطلب رابط جديد.", unavailable: "التحقق غير متاح مؤقتًا. حاول بعد شوي.", success: "تم التحقق. تقدر ترجع لمجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
+      en: { secure: "You're in a safe space", eyebrow: "WELCOME TO THE COMMUNITY", step: "JUST ONE QUICK CHECK", title: "Let’s get you in", description: "Solve the little puzzle below and you’re all set.", loading: "Checking your response…", failed: "That check did not go through. Please try again.", attempts: "That check did not go through. Attempts left: {count}.", expired: "This verification link has expired. Return to the bot and request a new one.", unavailable: "Verification is temporarily unavailable. Please try again shortly.", success: "All set! You’re verified. Head back to your group.", privacy: "Your check is private and only helps keep the group friendly.", footer: "Good people make great communities." },
+      ar: { secure: "مساحتك الآمنة", eyebrow: "أهلًا بيك في المجموعة", step: "خطوة صغيرة ونبدأ", title: "يلا ندخّلك المجموعة", description: "حل اللغز البسيط تحت، وهتدخل على طول.", loading: "بنتأكد من إجابتك…", failed: "المحاولة دي ما ضبطتش. جرّب مرة تانية.", attempts: "المحاولة دي ما ضبطتش. باقي لك {count} محاولات.", expired: "انتهت صلاحية رابط التحقق. ارجع للبوت واطلب رابط جديد.", unavailable: "التحقق مش متاح مؤقتًا. جرّب كمان شوية.", success: "تمام! تم التحقق. ارجع للمجموعة واستمتع.", privacy: "إجابتك خاصة وهدفها تحافظ على جو المجموعة اللطيف.", footer: "الناس الحلوة بتعمل مجتمعات أحلى." },
+      qr: { secure: "مساحتك الآمنة", eyebrow: "أهلًا بيك في المجموعة", step: "خطوة صغيرة ونبدأ", title: "يلا ندخّلك المجموعة", description: "حل اللغز البسيط تحت، وهتدخل على طول.", loading: "بنتأكد من إجابتك…", failed: "ما ضبطت هالمرة. جرّب مرة ثانية.", attempts: "ما ضبطت هالمرة. باقي لك {count} محاولات.", expired: "انتهت صلاحية رابط التحقق. ارجع للبوت واطلب رابط جديد.", unavailable: "التحقق مو متاح مؤقتًا. جرّب بعد شوي.", success: "تمام! تم التحقق. ارجع للمجموعة واستمتع.", privacy: "إجابتك خاصة وهدفها تحافظ على جو المجموعة اللطيف.", footer: "الناس الحلوة تسوي مجتمعات أحلى." },
       de: { secure: "Sichere Prüfung", eyebrow: "ZUGANG ZUR COMMUNITY", step: "NUR EIN SCHRITT", title: "Bestätige, dass du es bist", description: "Schließe diese kurze Sicherheitsprüfung ab, um fortzufahren.", loading: "Antwort wird geprüft…", failed: "Die Prüfung wurde nicht abgeschlossen. Bitte versuche es erneut.", attempts: "Verbleibende Versuche: {count}.", expired: "Dieser Prüfungslink ist abgelaufen. Fordere beim Bot einen neuen an.", unavailable: "Die Prüfung ist vorübergehend nicht verfügbar.", success: "Du bist bestätigt. Du kannst zu deiner Gruppe zurückkehren.", privacy: "Deine Prüfung dient nur dem Gruppenzugang.", footer: "Ein sicherer Ort beginnt mit dir." },
       fr: { secure: "Contrôle sécurisé", eyebrow: "ACCÈS À LA COMMUNAUTÉ", step: "UNE ÉTAPE RAPIDE", title: "Confirmez que vous êtes humain", description: "Terminez ce contrôle rapide pour accéder à votre groupe.", loading: "Vérification de votre réponse…", failed: "Le contrôle a échoué. Veuillez réessayer.", attempts: "Tentatives restantes : {count}.", expired: "Ce lien a expiré. Demandez-en un nouveau au bot.", unavailable: "La vérification est temporairement indisponible.", success: "Vous êtes vérifié. Vous pouvez retourner dans votre groupe.", privacy: "Votre vérification sert uniquement à accéder au groupe.", footer: "Un espace plus sûr commence avec vous." },
       ru: { secure: "Защищённая проверка", eyebrow: "ДОСТУП К СООБЩЕСТВУ", step: "ОДИН ПРОСТОЙ ШАГ", title: "Подтвердите, что вы человек", description: "Пройдите короткую проверку, чтобы перейти в группу.", loading: "Проверяем ответ…", failed: "Проверка не пройдена. Попробуйте ещё раз.", attempts: "Осталось попыток: {count}.", expired: "Срок действия ссылки истёк. Запросите новую у бота.", unavailable: "Проверка временно недоступна.", success: "Проверка пройдена. Можно вернуться в группу.", privacy: "Проверка используется только для доступа в группу.", footer: "Безопасное сообщество начинается с вас." },
@@ -643,7 +735,7 @@
         return;
       }
       submitted = true;
-      message(copy.loading);
+      message(copy.loading, "loading");
       try {
         const result = await fetch(`${apiUrl}/captcha/verify`, {
           method: "POST",
