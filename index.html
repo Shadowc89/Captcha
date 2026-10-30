@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1320">
-  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
   <title>Secure group verification</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -471,6 +471,10 @@
       background: #000
     }
 
+    .ambient {
+      opacity: 0
+    }
+
     .brand,
     .secure-label,
     .eyebrow,
@@ -580,20 +584,20 @@
   </main>
   <script>
     const translations = {
-      en: { secure: "Secure check", eyebrow: "COMMUNITY ACCESS", step: "ONE QUICK STEP", title: "Verify it’s you", description: "Complete this quick security check to continue to your group.", submit: "Continue", loading: "Checking your response…", failed: "That check did not go through. Please try again.", attempts: "That check did not go through. Attempts left: {count}.", expired: "This verification link has expired. Return to the bot and request a new one.", unavailable: "Verification is temporarily unavailable. Please try again shortly.", success: "You’re verified. You can return to your group.", privacy: "Your verification is protected and used only for group access.", footer: "A safer space starts with you." },
-      ar: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان السريع للمتابعة إلى مجموعتك.", submit: "متابعة", loading: "جارٍ التحقق من إجابتك…", failed: "لم يكتمل الفحص. حاول مرة أخرى.", attempts: "لم يكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع إلى البوت واطلب رابطًا جديدًا.", unavailable: "التحقق غير متاح مؤقتًا. حاول مرة أخرى بعد قليل.", success: "تم التحقق. يمكنك الرجوع إلى مجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
-      qr: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان للمتابعة إلى مجموعتك.", submit: "متابعة", loading: "جارٍ التحقق من إجابتك…", failed: "ما اكتمل الفحص. حاول مرة ثانية.", attempts: "ما اكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع للبوت واطلب رابط جديد.", unavailable: "التحقق غير متاح مؤقتًا. حاول بعد شوي.", success: "تم التحقق. تقدر ترجع لمجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
-      de: { secure: "Sichere Prüfung", eyebrow: "ZUGANG ZUR COMMUNITY", step: "NUR EIN SCHRITT", title: "Bestätige, dass du es bist", description: "Schließe diese kurze Sicherheitsprüfung ab, um fortzufahren.", submit: "Weiter", loading: "Antwort wird geprüft…", failed: "Die Prüfung wurde nicht abgeschlossen. Bitte versuche es erneut.", attempts: "Verbleibende Versuche: {count}.", expired: "Dieser Prüfungslink ist abgelaufen. Fordere beim Bot einen neuen an.", unavailable: "Die Prüfung ist vorübergehend nicht verfügbar.", success: "Du bist bestätigt. Du kannst zu deiner Gruppe zurückkehren.", privacy: "Deine Prüfung dient nur dem Gruppenzugang.", footer: "Ein sicherer Ort beginnt mit dir." },
-      fr: { secure: "Contrôle sécurisé", eyebrow: "ACCÈS À LA COMMUNAUTÉ", step: "UNE ÉTAPE RAPIDE", title: "Confirmez que vous êtes humain", description: "Terminez ce contrôle rapide pour accéder à votre groupe.", submit: "Continuer", loading: "Vérification de votre réponse…", failed: "Le contrôle a échoué. Veuillez réessayer.", attempts: "Tentatives restantes : {count}.", expired: "Ce lien a expiré. Demandez-en un nouveau au bot.", unavailable: "La vérification est temporairement indisponible.", success: "Vous êtes vérifié. Vous pouvez retourner dans votre groupe.", privacy: "Votre vérification sert uniquement à accéder au groupe.", footer: "Un espace plus sûr commence avec vous." },
-      ru: { secure: "Защищённая проверка", eyebrow: "ДОСТУП К СООБЩЕСТВУ", step: "ОДИН ПРОСТОЙ ШАГ", title: "Подтвердите, что вы человек", description: "Пройдите короткую проверку, чтобы перейти в группу.", submit: "Продолжить", loading: "Проверяем ответ…", failed: "Проверка не пройдена. Попробуйте ещё раз.", attempts: "Осталось попыток: {count}.", expired: "Срок действия ссылки истёк. Запросите новую у бота.", unavailable: "Проверка временно недоступна.", success: "Проверка пройдена. Можно вернуться в группу.", privacy: "Проверка используется только для доступа в группу.", footer: "Безопасное сообщество начинается с вас." },
-      sp: { secure: "Comprobación segura", eyebrow: "ACCESO A LA COMUNIDAD", step: "UN PASO RÁPIDO", title: "Confirma que eres una persona", description: "Completa esta comprobación para continuar al grupo.", submit: "Continuar", loading: "Comprobando tu respuesta…", failed: "La comprobación no se completó. Inténtalo de nuevo.", attempts: "Intentos restantes: {count}.", expired: "Este enlace ha caducado. Pide uno nuevo al bot.", unavailable: "La verificación no está disponible temporalmente.", success: "Verificación completada. Puedes volver al grupo.", privacy: "Tu verificación solo se usa para acceder al grupo.", footer: "Un espacio más seguro empieza contigo." }
+      en: { secure: "Secure check", eyebrow: "COMMUNITY ACCESS", step: "ONE QUICK STEP", title: "Verify it’s you", description: "Complete this quick security check to continue to your group.", loading: "Checking your response…", failed: "That check did not go through. Please try again.", attempts: "That check did not go through. Attempts left: {count}.", expired: "This verification link has expired. Return to the bot and request a new one.", unavailable: "Verification is temporarily unavailable. Please try again shortly.", success: "You’re verified. You can return to your group.", privacy: "Your verification is protected and used only for group access.", footer: "A safer space starts with you." },
+      ar: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان السريع للمتابعة إلى مجموعتك.", loading: "جارٍ التحقق من إجابتك…", failed: "لم يكتمل الفحص. حاول مرة أخرى.", attempts: "لم يكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع إلى البوت واطلب رابطًا جديدًا.", unavailable: "التحقق غير متاح مؤقتًا. حاول مرة أخرى بعد قليل.", success: "تم التحقق. يمكنك الرجوع إلى مجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
+      qr: { secure: "اتصال آمن", eyebrow: "الدخول إلى المجتمع", step: "خطوة واحدة سريعة", title: "أكد أنك مستخدم حقيقي", description: "أكمل فحص الأمان للمتابعة إلى مجموعتك.", loading: "جارٍ التحقق من إجابتك…", failed: "ما اكتمل الفحص. حاول مرة ثانية.", attempts: "ما اكتمل الفحص. المحاولات المتبقية: {count}.", expired: "انتهت صلاحية رابط التحقق. ارجع للبوت واطلب رابط جديد.", unavailable: "التحقق غير متاح مؤقتًا. حاول بعد شوي.", success: "تم التحقق. تقدر ترجع لمجموعتك.", privacy: "إجابتك محمية وتُستخدم للسماح بدخول المجموعة فقط.", footer: "مجتمع أكثر أمانًا يبدأ بك." },
+      de: { secure: "Sichere Prüfung", eyebrow: "ZUGANG ZUR COMMUNITY", step: "NUR EIN SCHRITT", title: "Bestätige, dass du es bist", description: "Schließe diese kurze Sicherheitsprüfung ab, um fortzufahren.", loading: "Antwort wird geprüft…", failed: "Die Prüfung wurde nicht abgeschlossen. Bitte versuche es erneut.", attempts: "Verbleibende Versuche: {count}.", expired: "Dieser Prüfungslink ist abgelaufen. Fordere beim Bot einen neuen an.", unavailable: "Die Prüfung ist vorübergehend nicht verfügbar.", success: "Du bist bestätigt. Du kannst zu deiner Gruppe zurückkehren.", privacy: "Deine Prüfung dient nur dem Gruppenzugang.", footer: "Ein sicherer Ort beginnt mit dir." },
+      fr: { secure: "Contrôle sécurisé", eyebrow: "ACCÈS À LA COMMUNAUTÉ", step: "UNE ÉTAPE RAPIDE", title: "Confirmez que vous êtes humain", description: "Terminez ce contrôle rapide pour accéder à votre groupe.", loading: "Vérification de votre réponse…", failed: "Le contrôle a échoué. Veuillez réessayer.", attempts: "Tentatives restantes : {count}.", expired: "Ce lien a expiré. Demandez-en un nouveau au bot.", unavailable: "La vérification est temporairement indisponible.", success: "Vous êtes vérifié. Vous pouvez retourner dans votre groupe.", privacy: "Votre vérification sert uniquement à accéder au groupe.", footer: "Un espace plus sûr commence avec vous." },
+      ru: { secure: "Защищённая проверка", eyebrow: "ДОСТУП К СООБЩЕСТВУ", step: "ОДИН ПРОСТОЙ ШАГ", title: "Подтвердите, что вы человек", description: "Пройдите короткую проверку, чтобы перейти в группу.", loading: "Проверяем ответ…", failed: "Проверка не пройдена. Попробуйте ещё раз.", attempts: "Осталось попыток: {count}.", expired: "Срок действия ссылки истёк. Запросите новую у бота.", unavailable: "Проверка временно недоступна.", success: "Проверка пройдена. Можно вернуться в группу.", privacy: "Проверка используется только для доступа в группу.", footer: "Безопасное сообщество начинается с вас." },
+      sp: { secure: "Comprobación segura", eyebrow: "ACCESO A LA COMUNIDAD", step: "UN PASO RÁPIDO", title: "Confirma que eres una persona", description: "Completa esta comprobación para continuar al grupo.", loading: "Comprobando tu respuesta…", failed: "La comprobación no se completó. Inténtalo de nuevo.", attempts: "Intentos restantes: {count}.", expired: "Este enlace ha caducado. Pide uno nuevo al bot.", unavailable: "La verificación no está disponible temporalmente.", success: "Verificación completada. Puedes volver al grupo.", privacy: "Tu verificación solo se usa para acceder al grupo.", footer: "Un espacio más seguro empieza contigo." }
     };
     const tg = window.Telegram && window.Telegram.WebApp;
     const language = (tg?.initDataUnsafe?.user?.language_code || "en").toLowerCase().split("-")[0];
     const copy = translations[language] || translations.en;
     const params = new URLSearchParams(location.search);
     const token = params.get("token") || new URLSearchParams(location.hash.slice(1)).get("token") || "";
-    const sitekey = params.get("key") || "";
+    const apiUrl = params.get("api") || "";
     const status = document.getElementById("status");
     let widget = null;
     let started = false;
@@ -615,12 +619,12 @@
     }
 
     const landing = {
-      ar: ["????? Hyper Help", "???? ???? ?????? ???? ????? ?? ????? ???? ??????."],
-      qr: ["????? Hyper Help", "???? ???? ?????? ???? ????? ?? ????? ???? ??????."],
+      ar: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله البوت لبدء الفحص."],
+      qr: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله البوت لبدء الفحص."],
       en: ["Hyper Help Mini App", "Open the verification link sent by the bot to start your check."],
-      de: ["Hyper Help Mini App", "?ffne den Pr?fungslink des Bots, um die Pr?fung zu starten."],
-      fr: ["Mini-app Hyper Help", "Ouvrez le lien de v?rification envoy? par le bot pour commencer."],
-      ru: ["????-?????????? Hyper Help", "???????? ?????? ????????, ???????????? ?????, ????? ??????."],
+      de: ["Hyper Help Mini App", "Öffne den Prüfungslink des Bots, um die Prüfung zu starten."],
+      fr: ["Mini-app Hyper Help", "Ouvrez le lien de vérification envoyé par le bot pour commencer."],
+      ru: ["Мини-приложение Hyper Help", "Откройте ссылку проверки от бота, чтобы начать."],
       sp: ["Mini aplicaci?n Hyper Help", "Abre el enlace de verificaci?n del bot para comenzar."]
     };
 
@@ -632,17 +636,42 @@
       started = true;
     }
 
-    function submitResponse(response) {
+    async function submitResponse(response) {
       if (submitted) return;
-      if (!tg || typeof tg.sendData !== "function") {
+      if (!tg?.initData || !apiUrl) {
         message(copy.unavailable, "error");
         return;
       }
       submitted = true;
       message(copy.loading);
       try {
-        tg.sendData(JSON.stringify({ type: "captcha", token, response }));
-        message(copy.success, "success");
+        const result = await fetch(`${apiUrl}/captcha/verify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({ init_data: tg.initData, session_token: token, hcaptcha_response: response })
+        });
+        const payload = await result.json();
+        if (payload.ok) {
+          message(copy.success, "success");
+          window.setTimeout(() => tg.close(), 900);
+          return;
+        }
+        if (payload.error === "session_expired" || payload.error === "session_used") {
+          message(copy.expired, "error");
+          return;
+        }
+        if (payload.error === "attempts_exhausted") {
+          message(copy.expired, "error");
+          return;
+        }
+        if (payload.error === "captcha_failed") {
+          message(copy.attempts.replace("{count}", String(payload.attempts_left ?? 0)), "error");
+        } else {
+          message(copy.unavailable, "error");
+        }
+        submitted = false;
+        if (widget !== null && window.hcaptcha) window.hcaptcha.reset(widget);
       } catch (_) {
         submitted = false;
         message(copy.unavailable, "error");
@@ -653,21 +682,29 @@
     window.initializeCaptcha = function () {
       if (started) return;
       started = true;
-      if (!token || !sitekey) {
+      if (!token || !apiUrl || !tg?.initData) {
         message(copy.expired, "error");
         return;
       }
-      try {
-        widget = window.hcaptcha.render("challenge", {
-          sitekey,
-          theme: "dark",
-          callback: submitResponse,
-          "expired-callback": () => message(copy.failed, "error"),
-          "error-callback": () => message(copy.unavailable, "error")
+      fetch(`${apiUrl}/captcha/config`, { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) throw new Error("config_unavailable");
+          return response.json();
+        })
+        .then(({ sitekey }) => {
+          if (!sitekey) throw new Error("missing_sitekey");
+          widget = window.hcaptcha.render("challenge", {
+            sitekey,
+            theme: "dark",
+            callback: submitResponse,
+            "expired-callback": () => message(copy.failed, "error"),
+            "error-callback": () => message(copy.unavailable, "error")
+          });
+        })
+        .catch(() => {
+          message(copy.unavailable, "error");
+          started = false;
         });
-      } catch (_) {
-        message(copy.unavailable, "error");
-      }
     };
 
     if (window.hcaptchaReady) window.initializeCaptcha();
