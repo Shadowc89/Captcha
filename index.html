@@ -457,6 +457,74 @@
         color: #748994
       }
     }
+
+    :root {
+      color-scheme: dark;
+      color: #fff;
+      background: #000;
+      --accent: #fff;
+      --line: rgba(255, 255, 255, .16)
+    }
+
+    body {
+      color: #fff;
+      background: #000
+    }
+
+    .brand,
+    .secure-label,
+    .eyebrow,
+    .step-label,
+    h1,
+    .description,
+    .status,
+    .privacy-note,
+    .footer {
+      color: #fff
+    }
+
+    .brand-mark,
+    .shield {
+      border-color: rgba(255, 255, 255, .5);
+      background: #080808
+    }
+
+    .brand-mark span,
+    .secure-dot,
+    .eyebrow-line,
+    .privacy-note svg {
+      color: #fff;
+      background-color: #fff
+    }
+
+    .shield {
+      color: #fff;
+      background: #080808
+    }
+
+    .verification-card {
+      border-color: rgba(255, 255, 255, .45);
+      background: #080808;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .08)
+    }
+
+    .card-glow {
+      background: rgba(255, 255, 255, .06)
+    }
+
+    .challenge-frame {
+      border-color: rgba(255, 255, 255, .24);
+      background: #000
+    }
+
+    .status[data-kind=error],
+    .status[data-kind=success] {
+      color: #fff
+    }
+
+    .footer-divider {
+      background: #fff
+    }
   </style>
 </head>
 
@@ -492,13 +560,6 @@
           <div id="challenge"></div>
         </div>
 
-        <button id="submit" class="verify-button" type="button" disabled>
-          <span id="submit-label">Continue</span>
-          <svg class="button-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M4.2 10h11.6m-4.8-4.8 4.8 4.8-4.8 4.8" stroke="currentColor" stroke-width="1.7"
-              stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
         <p id="status" class="status" role="status" aria-live="polite"></p>
 
         <div class="card-divider"></div>
@@ -527,28 +588,89 @@
       ru: { secure: "Защищённая проверка", eyebrow: "ДОСТУП К СООБЩЕСТВУ", step: "ОДИН ПРОСТОЙ ШАГ", title: "Подтвердите, что вы человек", description: "Пройдите короткую проверку, чтобы перейти в группу.", submit: "Продолжить", loading: "Проверяем ответ…", failed: "Проверка не пройдена. Попробуйте ещё раз.", attempts: "Осталось попыток: {count}.", expired: "Срок действия ссылки истёк. Запросите новую у бота.", unavailable: "Проверка временно недоступна.", success: "Проверка пройдена. Можно вернуться в группу.", privacy: "Проверка используется только для доступа в группу.", footer: "Безопасное сообщество начинается с вас." },
       sp: { secure: "Comprobación segura", eyebrow: "ACCESO A LA COMUNIDAD", step: "UN PASO RÁPIDO", title: "Confirma que eres una persona", description: "Completa esta comprobación para continuar al grupo.", submit: "Continuar", loading: "Comprobando tu respuesta…", failed: "La comprobación no se completó. Inténtalo de nuevo.", attempts: "Intentos restantes: {count}.", expired: "Este enlace ha caducado. Pide uno nuevo al bot.", unavailable: "La verificación no está disponible temporalmente.", success: "Verificación completada. Puedes volver al grupo.", privacy: "Tu verificación solo se usa para acceder al grupo.", footer: "Un espacio más seguro empieza contigo." }
     };
-    const tg = window.Telegram && window.Telegram.WebApp, language = (tg?.initDataUnsafe?.user?.language_code || "en").toLowerCase().split("-")[0], copy = translations[language] || translations.en, params = new URLSearchParams(location.search), token = params.get("token") || new URLSearchParams(location.hash.slice(1)).get("token") || "", sitekey = params.get("key") || "", button = document.getElementById("submit"), label = document.getElementById("submit-label"), status = document.getElementById("status"); let widget = null, started = false;
-    document.documentElement.lang = language; document.documentElement.dir = language === "ar" || language === "qr" ? "rtl" : "ltr"; for (const [id, key] of [["secure-label", "secure"], ["eyebrow", "eyebrow"], ["step-label", "step"], ["title", "title"], ["description", "description"], ["privacy-note", "privacy"], ["footer-copy", "footer"]]) document.getElementById(id).textContent = copy[key]; label.textContent = copy.submit; if (tg) { tg.ready(); tg.expand() }
-    function message(text, kind = "") { status.textContent = text; status.dataset.kind = kind } function reset() { if (widget !== null && window.hcaptcha) window.hcaptcha.reset(widget); button.disabled = true }
+    const tg = window.Telegram && window.Telegram.WebApp;
+    const language = (tg?.initDataUnsafe?.user?.language_code || "en").toLowerCase().split("-")[0];
+    const copy = translations[language] || translations.en;
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token") || new URLSearchParams(location.hash.slice(1)).get("token") || "";
+    const sitekey = params.get("key") || "";
+    const status = document.getElementById("status");
+    let widget = null;
+    let started = false;
+    let submitted = false;
+
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "ar" || language === "qr" ? "rtl" : "ltr";
+    for (const [id, key] of [["secure-label", "secure"], ["eyebrow", "eyebrow"], ["step-label", "step"], ["title", "title"], ["description", "description"], ["privacy-note", "privacy"], ["footer-copy", "footer"]]) {
+      document.getElementById(id).textContent = copy[key];
+    }
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    function message(text, kind = "") {
+      status.textContent = text;
+      status.dataset.kind = kind;
+    }
+
     const landing = {
-      ar: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله لك البوت لبدء التحقق."],
-      qr: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله لك البوت لبدء التحقق."],
+      ar: ["????? Hyper Help", "???? ???? ?????? ???? ????? ?? ????? ???? ??????."],
+      qr: ["????? Hyper Help", "???? ???? ?????? ???? ????? ?? ????? ???? ??????."],
       en: ["Hyper Help Mini App", "Open the verification link sent by the bot to start your check."],
-      de: ["Hyper Help Mini App", "Öffne den Prüfungslink des Bots, um die Prüfung zu starten."],
-      fr: ["Mini-app Hyper Help", "Ouvrez le lien de vérification envoyé par le bot pour commencer."],
-      ru: ["Мини-приложение Hyper Help", "Откройте ссылку проверки, отправленную ботом, чтобы начать."],
-      sp: ["Mini aplicación Hyper Help", "Abre el enlace de verificación del bot para comenzar."]
+      de: ["Hyper Help Mini App", "?ffne den Pr?fungslink des Bots, um die Pr?fung zu starten."],
+      fr: ["Mini-app Hyper Help", "Ouvrez le lien de v?rification envoy? par le bot pour commencer."],
+      ru: ["????-?????????? Hyper Help", "???????? ?????? ????????, ???????????? ?????, ????? ??????."],
+      sp: ["Mini aplicaci?n Hyper Help", "Abre el enlace de verificaci?n del bot para comenzar."]
     };
+
     if (!token) {
       document.getElementById("title").textContent = landing[language]?.[0] || landing.en[0];
       document.getElementById("description").textContent = landing[language]?.[1] || landing.en[1];
       document.querySelector(".step-label").hidden = true;
       document.querySelector(".challenge-frame").hidden = true;
-      button.hidden = true;
       started = true;
     }
-    window.initializeCaptcha = async function () { if (started) return; started = true; if (!token || !sitekey) { message(copy.expired, "error"); return } try { widget = window.hcaptcha.render("challenge", { sitekey, callback: () => { button.disabled = false; message("") }, "expired-callback": () => { button.disabled = true; message(copy.failed, "error") }, "error-callback": () => { button.disabled = true; message(copy.unavailable, "error") } }) } catch (_) { message(copy.unavailable, "error") } }; if (window.hcaptchaReady) window.initializeCaptcha();
-    button.addEventListener("click", () => { if (widget === null || !window.hcaptcha) return; if (!tg || typeof tg.sendData !== "function") { message(copy.unavailable, "error"); return } const response = window.hcaptcha.getResponse(widget); if (!response) return; button.disabled = true; label.textContent = copy.loading; message(copy.loading); try { tg.sendData(JSON.stringify({ type: "captcha", token, response })); message(copy.success, "success"); button.hidden = true } catch (_) { message(copy.unavailable, "error"); reset(); label.textContent = copy.submit } });
+
+    function submitResponse(response) {
+      if (submitted) return;
+      if (!tg || typeof tg.sendData !== "function") {
+        message(copy.unavailable, "error");
+        return;
+      }
+      submitted = true;
+      message(copy.loading);
+      try {
+        tg.sendData(JSON.stringify({ type: "captcha", token, response }));
+        message(copy.success, "success");
+      } catch (_) {
+        submitted = false;
+        message(copy.unavailable, "error");
+        if (widget !== null && window.hcaptcha) window.hcaptcha.reset(widget);
+      }
+    }
+
+    window.initializeCaptcha = function () {
+      if (started) return;
+      started = true;
+      if (!token || !sitekey) {
+        message(copy.expired, "error");
+        return;
+      }
+      try {
+        widget = window.hcaptcha.render("challenge", {
+          sitekey,
+          theme: "dark",
+          callback: submitResponse,
+          "expired-callback": () => message(copy.failed, "error"),
+          "error-callback": () => message(copy.unavailable, "error")
+        });
+      } catch (_) {
+        message(copy.unavailable, "error");
+      }
+    };
+
+    if (window.hcaptchaReady) window.initializeCaptcha();
   </script>
 </body>
 
