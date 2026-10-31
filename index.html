@@ -761,7 +761,10 @@
       try {
         const result = await fetch(`${apiUrl}/captcha/verify`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "1",
+          },
           cache: "no-store",
           body: JSON.stringify({ init_data: tg.initData, session_token: token, hcaptcha_response: response })
         });
@@ -800,7 +803,10 @@
         message(copy.expired, "error");
         return;
       }
-      fetch(`${apiUrl}/captcha/config`, { cache: "no-store" })
+      fetch(`${apiUrl}/captcha/config`, {
+        cache: "no-store",
+        headers: { "ngrok-skip-browser-warning": "1" },
+      })
         .then((response) => {
           if (!response.ok) throw new Error("config_unavailable");
           return response.json();
