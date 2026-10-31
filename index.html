@@ -18,7 +18,7 @@
   <style>
     :root {
       color-scheme: dark;
-      font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
       color: var(--tg-theme-text-color, #eef3fa);
       background: #0b1320;
       font-synthesis: none;
@@ -460,28 +460,28 @@
 
     :root {
       color-scheme: dark;
-      color: #f7f4ff;
-      background: #11101b;
-      --accent: #b6a1ff;
-      --line: rgba(197, 179, 255, .18)
+      color: #fafafa;
+      background: #0c0c0d;
+      --accent: #f4f4f5;
+      --line: rgba(231, 231, 234, .18)
     }
 
     body {
-      color: #f7f4ff;
+      color: #fafafa;
       background:
-        radial-gradient(ellipse at 12% 12%, rgba(129, 93, 255, .22), transparent 34%),
-        radial-gradient(ellipse at 88% 78%, rgba(46, 207, 190, .14), transparent 35%),
-        linear-gradient(145deg, #11101b, #171426 55%, #101b21)
+        radial-gradient(ellipse at 13% 13%, rgba(255, 255, 255, .13), transparent 32%),
+        radial-gradient(ellipse at 89% 77%, rgba(170, 174, 181, .12), transparent 36%),
+        linear-gradient(145deg, #09090a, #202124 53%, #101112)
     }
 
     .ambient {
       opacity: .8;
-      border-color: rgba(173, 145, 255, .12);
+      border-color: rgba(235, 235, 238, .17);
       animation: float-orbit 11s ease-in-out infinite alternate
     }
 
     .ambient:after {
-      border-color: rgba(74, 225, 205, .11)
+      border-color: rgba(176, 179, 184, .2)
     }
 
     .ambient-two {
@@ -497,73 +497,74 @@
     .status,
     .privacy-note,
     .footer {
-      color: #f7f4ff
+      color: #f7f7f8
     }
 
     .brand-mark {
-      border-color: rgba(202, 184, 255, .4);
-      background: linear-gradient(145deg, rgba(148, 111, 255, .28), rgba(63, 216, 198, .16));
-      box-shadow: 0 5px 22px rgba(134, 101, 255, .17)
+      border-color: rgba(245, 245, 246, .5);
+      background: linear-gradient(145deg, rgba(255, 255, 255, .22), rgba(128, 130, 134, .2));
+      box-shadow: 0 5px 24px rgba(235, 235, 238, .14)
     }
 
     .brand-mark span {
-      background: linear-gradient(180deg, #c7b5ff, #6ce2cf)
+      background: linear-gradient(180deg, #fff, #aeb0b5)
     }
 
     .secure-dot {
-      background: #5ee0c5;
-      box-shadow: 0 0 0 4px rgba(94, 224, 197, .12), 0 0 15px rgba(94, 224, 197, .72);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, .1), 0 0 17px rgba(255, 255, 255, .78);
       animation: dot-pulse 2s ease-in-out infinite
     }
 
     .eyebrow {
-      color: #c4b2ff
+      color: #e4e4e7
     }
 
     .eyebrow-line {
-      background: linear-gradient(90deg, #a78bfa, #5de0c7)
+      background: linear-gradient(90deg, #fff, #92949a)
     }
 
     .step-label {
-      color: #9de7d8
+      color: #d4d4d8
     }
 
     .verification-card {
-      border-color: rgba(191, 171, 255, .28);
-      background: linear-gradient(145deg, rgba(34, 29, 52, .96), rgba(20, 34, 39, .97));
-      box-shadow: 0 28px 90px rgba(5, 5, 14, .52), 0 0 46px rgba(126, 93, 231, .1), inset 0 1px 0 rgba(255, 255, 255, .08);
+      border-color: rgba(235, 235, 239, .27);
+      background: linear-gradient(145deg, rgba(39, 40, 43, .97), rgba(19, 20, 22, .98));
+      box-shadow: 0 28px 90px rgba(0, 0, 0, .55), 0 0 48px rgba(220, 220, 224, .1), inset 0 1px 0 rgba(255, 255, 255, .12);
       transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease
     }
 
     @media (hover:hover) and (pointer:fine) {
       .verification-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(191, 171, 255, .46);
-        box-shadow: 0 34px 100px rgba(5, 5, 14, .58), 0 0 58px rgba(126, 93, 231, .16), inset 0 1px 0 rgba(255, 255, 255, .1)
+        border-color: rgba(255, 255, 255, .52);
+        box-shadow: 0 34px 100px rgba(0, 0, 0, .62), 0 0 62px rgba(235, 235, 239, .16), inset 0 1px 0 rgba(255, 255, 255, .15)
       }
     }
 
     .card-glow {
-      background: radial-gradient(ellipse at 50% 0, rgba(174, 139, 255, .2), transparent 64%)
+      background: radial-gradient(ellipse at 50% 0, rgba(255, 255, 255, .17), transparent 65%);
+      animation: silver-glow 4.2s ease-in-out infinite alternate
     }
 
     .shield {
-      color: #c8b6ff;
-      border-color: rgba(192, 169, 255, .36);
-      background: linear-gradient(145deg, rgba(150, 112, 255, .2), rgba(51, 207, 187, .11));
-      box-shadow: 0 0 34px rgba(145, 108, 255, .18), inset 0 1px 0 rgba(255, 255, 255, .09);
+      color: #fff;
+      border-color: rgba(255, 255, 255, .42);
+      background: linear-gradient(145deg, rgba(255, 255, 255, .19), rgba(112, 114, 119, .16));
+      box-shadow: 0 0 36px rgba(235, 235, 239, .16), inset 0 1px 0 rgba(255, 255, 255, .16);
       animation: shield-float 3.4s ease-in-out infinite
     }
 
     .challenge-frame {
-      border-color: rgba(172, 155, 218, .2);
-      background: linear-gradient(135deg, rgba(10, 12, 23, .7), rgba(16, 30, 35, .76));
+      border-color: rgba(220, 220, 224, .23);
+      background: linear-gradient(135deg, rgba(8, 8, 9, .78), rgba(55, 56, 60, .52));
       transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease
     }
 
     .challenge-frame:focus-within {
-      border-color: rgba(112, 223, 202, .58);
-      box-shadow: 0 0 0 3px rgba(112, 223, 202, .09), 0 8px 28px rgba(18, 180, 156, .08)
+      border-color: rgba(255, 255, 255, .72);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, .1), 0 8px 30px rgba(210, 210, 215, .12)
     }
 
     .status[data-kind=loading] {
@@ -571,53 +572,74 @@
       align-items: center;
       justify-content: center;
       gap: 9px;
-      color: #c4b2ff
+      color: #f0f0f2
     }
 
     .status[data-kind=loading]:before {
       width: 13px;
       height: 13px;
-      border: 2px solid rgba(196, 178, 255, .3);
-      border-top-color: #72e3cc;
+      border: 2px solid rgba(255, 255, 255, .28);
+      border-top-color: #fff;
       border-radius: 50%;
       content: "";
       animation: spin .75s linear infinite
     }
 
     .status[data-kind=error] {
-      color: #ffabbc
+      color: #e4e4e7
     }
 
     .status[data-kind=success] {
-      color: #7de6c9
+      color: #fff;
+      text-shadow: 0 0 18px rgba(255, 255, 255, .28)
     }
 
     .privacy-note svg {
-      color: #78dfca
+      color: #d4d4d8
     }
 
     .footer-divider {
-      background: linear-gradient(90deg, #b59cff, #63dfc8)
+      background: linear-gradient(90deg, #fff, #92949a)
     }
 
     @keyframes dot-pulse {
-      50% { box-shadow: 0 0 0 7px rgba(94, 224, 197, .04), 0 0 19px rgba(94, 224, 197, .85) }
+      50% {
+        box-shadow: 0 0 0 7px rgba(255, 255, 255, .04), 0 0 21px rgba(255, 255, 255, .96)
+      }
     }
 
     @keyframes shield-float {
-      50% { transform: translateY(-3px) rotate(-2deg) }
+      50% {
+        transform: translateY(-3px) rotate(-2deg)
+      }
     }
 
     @keyframes float-orbit {
-      to { transform: translate3d(-16px, 13px, 0) scale(1.06) }
+      to {
+        transform: translate3d(-16px, 13px, 0) scale(1.06)
+      }
+    }
+
+    @keyframes silver-glow {
+      to {
+        opacity: .58;
+        transform: scale(1.08)
+      }
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg) }
+      to {
+        transform: rotate(360deg)
+      }
     }
 
     @media(prefers-reduced-motion:reduce) {
-      .ambient, .secure-dot, .shield, .status[data-kind=loading]:before {
+
+      .ambient,
+      .secure-dot,
+      .shield,
+      .card-glow,
+      .status[data-kind=loading]:before {
         animation: none !important
       }
     }
@@ -713,8 +735,8 @@
     const landing = {
       ar: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله البوت لبدء الفحص."],
       qr: ["تطبيق Hyper Help", "افتح رابط التحقق الذي أرسله البوت لبدء الفحص."],
-      en: ["Hyper Help Mini App", "Open the verification link sent by the bot to start your check."],
-      de: ["Hyper Help Mini App", "Öffne den Prüfungslink des Bots, um die Prüfung zu starten."],
+      en: ["Hyper Help Check", "Open the verification link sent by the bot to start your check."],
+      de: ["Hyper Help Check", "Öffne den Prüfungslink des Bots, um die Prüfung zu starten."],
       fr: ["Mini-app Hyper Help", "Ouvrez le lien de vérification envoyé par le bot pour commencer."],
       ru: ["Мини-приложение Hyper Help", "Откройте ссылку проверки от бота, чтобы начать."],
       sp: ["Mini aplicaci?n Hyper Help", "Abre el enlace de verificaci?n del bot para comenzar."]
